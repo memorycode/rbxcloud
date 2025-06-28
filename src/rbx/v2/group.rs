@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use serde::{Deserialize, Serialize};
 
 use crate::rbx::{error::Error, types::GroupId, util::QueryString};
@@ -194,6 +196,7 @@ pub async fn list_group_roles(
         .get(url)
         .header("x-api-key", &params.api_key)
         .query(&query)
+        .timeout(Duration::from_secs(5))
         .send()
         .await?;
 
@@ -233,6 +236,7 @@ pub async fn list_group_memberships(
         .get(url)
         .header("x-api-key", &params.api_key)
         .query(&query)
+        .timeout(Duration::from_secs(5))
         .send()
         .await?;
 
