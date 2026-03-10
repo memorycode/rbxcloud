@@ -124,6 +124,7 @@ pub struct ListGroupMembershipsResponse {
     pub next_page_token: Option<String>,
 }
 
+#[derive(Debug)]
 pub struct UpdateGroupMembershipParams {
     pub api_key: String,
     pub group_id: GroupId,
@@ -263,12 +264,20 @@ pub async fn update_group_membership(
 ) -> Result<GroupMembership, Error> {
     let client = reqwest::Client::new();
 
+    let prefix = format!("groups/{}/roles/", params.group_id);
+    let membership_id = &params
+        .membership
+        .path
+        .strip_prefix(&prefix)
+        .unwrap_or(&params.membership.path);
+
     let url = format!(
         "https://apis.roblox.com/cloud/v2/groups/{groupId}/memberships/{membershipId}",
         groupId = &params.group_id,
-        membershipId = &params.membership.path
+        membershipId = membership_id
     );
 
+    println!("help {:?}", params);
     let body = serde_json::json!({
         "path": params.membership.path,
         "user": params.membership.user,
