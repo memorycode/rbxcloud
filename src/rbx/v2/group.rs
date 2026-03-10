@@ -124,6 +124,13 @@ pub struct ListGroupMembershipsResponse {
     pub next_page_token: Option<String>,
 }
 
+pub struct UpdateGroupMembershipParams {
+    pub api_key: String,
+    pub group_id: GroupId,
+    pub membership: GroupMembership,
+    pub role: String,
+}
+
 pub async fn get_group(params: &GetGroupParams) -> Result<GetGroupResponse, Error> {
     let client = reqwest::Client::new();
 
@@ -248,5 +255,40 @@ pub async fn list_group_memberships(
     }
 
     let body = res.json::<ListGroupMembershipsResponse>().await?;
+    Ok(body)
+}
+
+pub async fn update_group_membership(
+    params: &UpdateGroupMembershipParams,
+) -> Result<GroupMembership, Error> {
+    let client = reqwest::Client::new();
+
+    let url = format!(
+        "https://apis.roblox.com/cloud/v2/groups/{groupId}/memberships/{userId}",
+        groupId = &params.group_id,
+        userId = &params.membership.user,
+    );
+
+    let body = serde_json::json!({
+        "path": params.membership.path,
+        "user": params.membership.user,
+        "role": params.role
+    });
+
+    let res = client
+        .patch(url)
+        .header("x-api-key", &params.api_key)
+        .json(&body)
+        .send()
+        .await?;
+
+    let status = res.status();
+
+    if !status.is_success() {
+        let code = status.as_u16();
+        return handle_http_err(code);
+    }
+
+    let body = res.json::<GroupMembership>().await?;
     Ok(body)
 }
