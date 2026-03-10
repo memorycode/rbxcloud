@@ -264,9 +264,9 @@ pub async fn update_group_membership(
     let client = reqwest::Client::new();
 
     let url = format!(
-        "https://apis.roblox.com/cloud/v2/groups/{groupId}/memberships/{userId}",
+        "https://apis.roblox.com/cloud/v2/groups/{groupId}/memberships/{membershipId}",
         groupId = &params.group_id,
-        userId = &params.membership.user,
+        membershipId = &params.membership.path
     );
 
     let body = serde_json::json!({
