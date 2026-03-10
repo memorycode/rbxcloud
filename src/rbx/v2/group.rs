@@ -293,10 +293,6 @@ pub async fn update_group_membership(
     let status = res.status();
 
     if !status.is_success() {
-        println!(
-            "Failed to update group membership: {}",
-            res.text().await.unwrap()
-        );
         let code = status.as_u16();
         return handle_http_err(code);
     }
