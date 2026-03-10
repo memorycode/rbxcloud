@@ -264,7 +264,7 @@ pub async fn update_group_membership(
 ) -> Result<GroupMembership, Error> {
     let client = reqwest::Client::new();
 
-    let prefix = format!("groups/{}/roles/", params.group_id);
+    let prefix = format!("groups/{}/memberships/", params.group_id);
     let membership_id = &params
         .membership
         .path
@@ -277,7 +277,6 @@ pub async fn update_group_membership(
         membershipId = membership_id
     );
 
-    println!("help {:?}", params);
     let body = serde_json::json!({
         "path": params.membership.path,
         "user": params.membership.user,
