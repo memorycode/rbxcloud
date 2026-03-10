@@ -107,7 +107,7 @@ pub struct ListGroupMembershipsParams {
     pub filter: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GroupMembership {
     pub path: String,
