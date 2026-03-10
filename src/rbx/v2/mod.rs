@@ -43,7 +43,10 @@ pub mod universe;
 pub mod user;
 pub mod user_restriction;
 
-use crate::rbx::error::Error;
+use crate::rbx::{
+    error::Error,
+    v2::group::{GroupMembership, UpdateGroupMembershipParams},
+};
 
 use super::types::{GroupId, PlaceId, RobloxUserId, UniverseId};
 
@@ -158,6 +161,20 @@ impl GroupClient {
             max_page_size,
             page_token,
             filter,
+        })
+        .await
+    }
+
+    pub async fn update_membership(
+        &self,
+        membership: GroupMembership,
+        role: String,
+    ) -> Result<GroupMembership, Error> {
+        group::update_group_membership(&UpdateGroupMembershipParams {
+            api_key: self.api_key.clone(),
+            group_id: self.group_id,
+            membership,
+            role,
         })
         .await
     }
